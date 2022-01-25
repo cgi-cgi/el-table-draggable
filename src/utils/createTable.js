@@ -4,7 +4,7 @@ export const columns = [
         key: "index",
         type: "number",
         width: 80,
-        fixed: true
+        fixed: 'left'
     },
     {
         key: "id",
@@ -19,6 +19,7 @@ export const columns = [
     {
         key: "url",
         type: "url",
+        fixed: 'right'
     },
 ]
 
