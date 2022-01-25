@@ -429,11 +429,6 @@ export const CONFIG = {
           setTimeout(() => {
             dom.swapDom(fromCol.el, toCol.el)
           })
-          // const temp = fromCol.originWidth
-          // fromCol.width = toCol.originWidth
-          // toCol.width = temp
-          // fromCol.el.setAttribute('width', fromCol.width)
-          // toCol.el.setAttribute('width', toCol.width)
 
           return true;
         },
