@@ -4,6 +4,7 @@ export const columns = [
         key: "index",
         type: "number",
         width: 80,
+        fixed: true
     },
     {
         key: "id",
