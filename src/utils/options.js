@@ -332,7 +332,6 @@ export const CONFIG = {
      */
     OPTION(context, elTableInstance, animation) {
       let isDragging = false // 正在拖拽
-      let columnIsMoving = false // 列正在移动
       // 自动对齐
       function autoAlignmentTableByThList(thList) {
         if (!isDragging) {
