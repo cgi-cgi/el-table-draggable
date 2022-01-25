@@ -23,8 +23,8 @@
 </template>
 
 <script>
-export const name = "列表拖拽带fixed列"
-export const nameEn = 'Fixed Row Draggable'
+export const name = "列表拖拽带fixed列（开发中）"
+export const nameEn = 'Fixed Row Draggable（working）'
 import { createData, columns } from '../utils/createTable'
 export default {
   data() {
