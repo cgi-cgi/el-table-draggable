@@ -297,13 +297,6 @@ export const CONFIG = {
             dom.remove(el);
           });
 
-          // // 移除占位的行
-          // document
-          //   .querySelectorAll(`.${PLACEHOLDER_CSS}`)
-          //   .forEach((placeholderEl) => {
-          //     dom.remove(placeholderEl);
-          // });
-
           /**
            * 全局重新开始监听dom变化
            * 需要在之前dom操作完成之后进行
