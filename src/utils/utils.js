@@ -106,7 +106,7 @@ export function createOrUpdateDomMapping(
   const { children } = treeProps;
   mapping.clear();
   observer && observer.stop(); // 停止监听变化，构建完成后继续监听
-  const wrapperEl = tableInstance.$el.querySelector(wrapper);
+  const [wrapperEl, ...fixedTableWrapperEl] = Array.from(tableInstance.$el.querySelectorAll(wrapper));
 
   /** @type {DomInfo} 最新被使用的dom, 默认是采用了整个table作为root */
   let latestDomInfo = {
@@ -118,11 +118,14 @@ export function createOrUpdateDomMapping(
     parent: null,
     childrenList: [],
     type: "root",
-    isShow: true
+    isShow: true,
+    fixedTableProxy: []
   };
   mapping.set(wrapperEl, latestDomInfo);
 
   const trList = wrapperEl.querySelectorAll("tr");
+  const fixedTableWithTrList = fixedTableWrapperEl.map(fixedTable => (Array.from(fixedTable.querySelectorAll("tr"))))
+
   trList.forEach((tr, index) => {
     try {
       const { className, style } = tr;
@@ -137,7 +140,8 @@ export function createOrUpdateDomMapping(
         index: 0,
         parent: null,
         childrenList: [],
-        isShow
+        isShow,
+        fixedTableProxy: fixedTableWithTrList.map(fixedTableTrList => fixedTableTrList[index])
       };
 
       /**

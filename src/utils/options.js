@@ -28,6 +28,7 @@ export const DOM_MAPPING_NAME = "_mapping";
  * @property {DomInfo[]} childrenList
  * @property {boolean} isShow
  * @property {'root' | 'leaf' | 'proxy' | undefined} type
+ * @property {Element[]} fixedTableProxy 对fixed列对应的行的代理
  */
 
 /**
@@ -76,7 +77,8 @@ export function exchange(oldIndex, fromList, newIndex, toList, pullMode) {
  */
 export const CONFIG = {
   ROW: {
-    WRAPPER: ".el-table__body-wrapper tbody",
+    // WRAPPER: ".el-table__body-wrapper tbody",
+    WRAPPER: ".el-table__body tbody", // 支持fixed的两个table
     DRAGGABLE: ".el-table__row",
     /**
      * @param {Map<Element, Vue>} context
@@ -99,6 +101,31 @@ export const CONFIG = {
       elTableInstance[DOM_MAPPING_NAME] = mappingOberver;
       mappingOberver.rebuild();
       mappingOberver.start();
+
+      let isDragging = false
+
+      /**
+       * 定时把行的位置信息同步
+       */
+      const trList = Array.from(elTableInstance.$el.querySelectorAll(`${CONFIG.ROW.WRAPPER} tr`))
+      const domInfoMapping = elTableInstance[DOM_MAPPING_NAME].mapping
+      function syncRowPosition() {
+        if (!isDragging) {
+          return
+        }
+        trList.forEach(tr => {
+          const domInfo = domInfoMapping.get(tr)
+          if (domInfo) {
+            const { el, fixedTableProxy } = domInfo
+            const position = dom.getDomPosition(el)
+            fixedTableProxy.forEach(fixedTr => {
+              dom.translateTo(fixedTr, position)
+            })
+          }
+        })
+
+        requestAnimationFrame(syncRowPosition)
+      }
 
       return {
         onStart(evt) {
@@ -137,6 +164,9 @@ export const CONFIG = {
           const domInfo = mappingOberver.mapping.get(item);
           // 收起拖动的行的已展开行
           dom.toggleExpansion(domInfo, false);
+          isDragging = true
+          // 开始自动同步fixed的行
+          syncRowPosition()
         },
         onMove(evt, originEvt) {
           const { related, dragged, to, from, willInsertAfter } = evt;
@@ -310,6 +340,8 @@ export const CONFIG = {
               }
             }
           }, 0);
+
+          isDragging = false
         },
       };
     },
